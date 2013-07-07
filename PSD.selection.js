@@ -1,3 +1,8 @@
+/**
+ * @author shandan.com@gmail.com
+ * @20130707
+ * PSD 选区操作
+ */
 
 PSD.selection = {
   /**
