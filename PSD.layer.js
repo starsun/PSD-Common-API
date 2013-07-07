@@ -1,3 +1,9 @@
+/**
+ * @author shandan.com@gmail.com
+ * @20130707
+ * PSD 图层操作
+ */
+ 
 PSD.layer = {
   /**
 	 * 创建图层
