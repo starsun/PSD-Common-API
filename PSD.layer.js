@@ -1,11 +1,10 @@
 /**
  * @author shandan.com@gmail.com
- * @20130707
- * PSD 图层操作
+ * @20130707 PSD 图层操作
  */
- 
+
 PSD.layer = {
-  /**
+	/**
 	 * 创建图层
 	 */
 	createLayer: function() {
@@ -281,7 +280,8 @@ PSD.layer = {
                 textType: textItem.kind.toString(),
                 bold: textItem.fauxBold,
                 italic: textItem.fauxItalic,
-                indent: 0,//(textItem.firstLineIndent&&textItem.firstLineIndent.value)? Math.round(textItem.firstLineIndent.value):0,
+                indent: 0,// (textItem.firstLineIndent&&textItem.firstLineIndent.value)?
+							// Math.round(textItem.firstLineIndent.value):0,
                 underline: textItem.underline == UnderlineType.UNDERLINEOFF ? false : true,
                 textRange: this.getTextRange(),
                 position: {
@@ -384,7 +384,7 @@ PSD.layer = {
 	
 	
 	/**
-	 * 获取当前文本图层样式
+	 * 获取当前文本图层特效
 	 */
 	getTxtEffects: function() {
 		
@@ -401,5 +401,50 @@ PSD.layer = {
             }
         }
         return effects;
+	},
+	
+	/**
+	 * 获取当前多样式的文本图层的样式
+	 * 
+	 * @return [{bold:false, color:ff0000, font:SimHei, italic:false,
+	 *         lineHeight:30; range:[0,6],size:48,underline:false},{}]
+	 */	
+	
+	getTextRange: function(){
+		var desc = (function(){
+			var ref = new ActionReference();
+			ref.putEnumerated(charIDToTypeID("Lyr "), charIDToTypeID("Ordn"), charIDToTypeID("Trgt"));
+			return executeActionGet(ref);
+		})();
+		
+		var list =  desc.getObjectValue(charIDToTypeID("Txt "));
+        var tsr =  list.getList(charIDToTypeID("Txtt"));
+        var info = [];
+		
+        for(var i = 0, l = tsr.count;i < l; i++){
+			var tsr0 =  tsr.getObjectValue(i) ;
+			var from = tsr0.getInteger(charIDToTypeID("From"));
+			var to = tsr0.getInteger(charIDToTypeID("T   "));
+			var range = [from, to];
+			var textStyle = tsr0.getObjectValue(charIDToTypeID("TxtS"));
+			var font = textStyle.getString(charIDToTypeID("FntN" )); 
+			var size = textStyle.getDouble(charIDToTypeID("Sz  " ));
+			var color = textStyle.getObjectValue(charIDToTypeID('Clr '));
+			var bold = textStyle.getBoolean(stringIDToTypeID('syntheticBold'));
+			var italic = textStyle.getBoolean(stringIDToTypeID('syntheticItalic'));
+			var underlineValue = textStyle.getEnumerationValue(stringIDToTypeID( "underline" ));
+			var underline = underlineValue == 1647 ? true : false;
+			var autoLeading = textStyle.getBoolean(stringIDToTypeID( "autoLeading" ));
+			var textColor = new SolidColor;
+			
+			textColor.rgb.red = color.getDouble(charIDToTypeID('Rd  '));
+			textColor.rgb.green = color.getDouble(charIDToTypeID('Grn '));
+			textColor.rgb.blue = color.getDouble(charIDToTypeID('Bl  '));
+			var o = {range:range, font:font, size:size, color:textColor.rgb.hexValue, bold:bold, italic:italic, underline:underline};
+			if(!autoLeading) o.lineHeight = textStyle.getUnitDoubleValue(charIDToTypeID( "Ldng" ));
+			info.push(o);
+		}
+        return info;       
 	}
+	
 };
