@@ -196,7 +196,7 @@ PSD.layer = {
 	/**
 	 * 判断名称为name的图层是否存在
 	 */
-	isLayerHere: function(name) {
+	isLayerExist: function(name) {
         var layers = app.activeDocument.layers;
         var i;
         for (i = 0; i < layers.length; i++) {
