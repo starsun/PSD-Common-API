@@ -208,6 +208,15 @@ PSD.layer = {
 	},
 	
 	/**
+	 * 获取当前活动图层对象
+	 */
+	
+	getActiveLayer: function() {
+		var lyr = app.activeDocument.activeLayer;
+		return lyr ? lyr : -1;
+	},
+	
+	/**
 	 * 获取当前图层ID
 	 */
 	getLayerId: function(){
