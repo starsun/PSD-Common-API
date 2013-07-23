@@ -284,7 +284,7 @@ PSD.layer = {
             textInfo = {
                 color: textItem.color.rgb.hexValue,
                 contents: textItem.contents,
-                font: WEBFONTS.getWebFont(textItem.font),
+                font: textItem.font,
                 size: Math.round(textItem.size.value),
                 textType: textItem.kind.toString(),
                 bold: textItem.fauxBold,
