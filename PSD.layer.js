@@ -7,138 +7,17 @@ PSD.layer = {
 	/**
 	 * 创建图层
 	 */
-	createLayer: function() {
-        var idMk = charIDToTypeID("Mk  ");
-        var desc2 = new ActionDescriptor();
-        var idnull = charIDToTypeID("null");
-        var ref1 = new ActionReference();
-        var idLyr = charIDToTypeID("Lyr ");
-        ref1.putClass(idLyr);
-        desc2.putReference(idnull, ref1);
-        executeAction(idMk, desc2, DialogModes.NO);	
+	addArtLayer: function() {
+        return app.activeDocument.artLayers.add();
 	},
 	
 	/**
 	 * 创建文本图层
 	 */
-	createTxtLayer: function(){
-	    var idMk = charIDToTypeID( "Mk  " );
-	    var desc193 = new ActionDescriptor();
-	    var idnull = charIDToTypeID( "null" );
-	    var ref83 = new ActionReference();
-	    var idTxLr = charIDToTypeID( "TxLr" );
-	    ref83.putClass( idTxLr );
-	    desc193.putReference( idnull, ref83 );
-	    var idUsng = charIDToTypeID( "Usng" );
-	    var desc194 = new ActionDescriptor();
-	    var idTxt = charIDToTypeID( "Txt " );
-	    desc194.putString( idTxt, "" );
-	    var idwarp = stringIDToTypeID( "warp" );
-	    var desc195 = new ActionDescriptor();
-	    var idwarpStyle = stringIDToTypeID( "warpStyle" );
-	    var idwarpStyle = stringIDToTypeID( "warpStyle" );
-	    var idwarpNone = stringIDToTypeID( "warpNone" );
-	    desc195.putEnumerated( idwarpStyle, idwarpStyle, idwarpNone );
-	    var idwarpValue = stringIDToTypeID( "warpValue" );
-	    desc195.putDouble( idwarpValue, 0.000000 );
-	    var idwarpPerspective = stringIDToTypeID( "warpPerspective" );
-	    desc195.putDouble( idwarpPerspective, 0.000000 );
-	    var idwarpPerspectiveOther = stringIDToTypeID( "warpPerspectiveOther" );
-	    desc195.putDouble( idwarpPerspectiveOther, 0.000000 );
-	    var idwarpRotate = stringIDToTypeID( "warpRotate" );
-	    var idOrnt = charIDToTypeID( "Ornt" );
-	    var idHrzn = charIDToTypeID( "Hrzn" );
-	    desc195.putEnumerated( idwarpRotate, idOrnt, idHrzn );
-	    var idwarp = stringIDToTypeID( "warp" );
-	    desc194.putObject( idwarp, idwarp, desc195 );
-	    var idTxtC = charIDToTypeID( "TxtC" );
-	    var desc196 = new ActionDescriptor();
-	    var idHrzn = charIDToTypeID( "Hrzn" );
-	    var idPrc = charIDToTypeID( "#Prc" );
-	    desc196.putUnitDouble( idHrzn, idPrc, 3.833333 );
-	    var idVrtc = charIDToTypeID( "Vrtc" );
-	    var idPrc = charIDToTypeID( "#Prc" );
-	    desc196.putUnitDouble( idVrtc, idPrc, 32.810458 );
-	    var idPnt = charIDToTypeID( "Pnt " );
-	    desc194.putObject( idTxtC, idPnt, desc196 );
-	    var idtextGridding = stringIDToTypeID( "textGridding" );
-	    var idtextGridding = stringIDToTypeID( "textGridding" );
-	    var idNone = charIDToTypeID( "None" );
-	    desc194.putEnumerated( idtextGridding, idtextGridding, idNone );
-	    var idOrnt = charIDToTypeID( "Ornt" );
-	    var idOrnt = charIDToTypeID( "Ornt" );
-	    var idHrzn = charIDToTypeID( "Hrzn" );
-	    desc194.putEnumerated( idOrnt, idOrnt, idHrzn );
-	    var idAntA = charIDToTypeID( "AntA" );
-	    var idAnnt = charIDToTypeID( "Annt" );
-	    var idantiAliasSharp = stringIDToTypeID( "antiAliasSharp" );
-	    desc194.putEnumerated( idAntA, idAnnt, idantiAliasSharp );
-	    var idtextShape = stringIDToTypeID( "textShape" );
-	    var list31 = new ActionList();
-	    var desc197 = new ActionDescriptor();
-	    var idTEXT = charIDToTypeID( "TEXT" );
-	    var idTEXT = charIDToTypeID( "TEXT" );
-	    var idPnt = charIDToTypeID( "Pnt " );
-	    desc197.putEnumerated( idTEXT, idTEXT, idPnt );
-	    var idOrnt = charIDToTypeID( "Ornt" );
-	    var idOrnt = charIDToTypeID( "Ornt" );
-	    var idHrzn = charIDToTypeID( "Hrzn" );
-	    desc197.putEnumerated( idOrnt, idOrnt, idHrzn );
-	    var idTrnf = charIDToTypeID( "Trnf" );
-	    var desc198 = new ActionDescriptor();
-	    var idxx = stringIDToTypeID( "xx" );
-	    desc198.putDouble( idxx, 1.000000 );
-	    var idxy = stringIDToTypeID( "xy" );
-	    desc198.putDouble( idxy, 0.000000 );
-	    var idyx = stringIDToTypeID( "yx" );
-	    desc198.putDouble( idyx, 0.000000 );
-	    var idyy = stringIDToTypeID( "yy" );
-	    desc198.putDouble( idyy, 1.000000 );
-	    var idtx = stringIDToTypeID( "tx" );
-	    desc198.putDouble( idtx, 0.000000 );
-	    var idty = stringIDToTypeID( "ty" );
-	    desc198.putDouble( idty, 0.000000 );
-	    var idTrnf = charIDToTypeID( "Trnf" );
-	    desc197.putObject( idTrnf, idTrnf, desc198 );
-	    var idrowCount = stringIDToTypeID( "rowCount" );
-	    desc197.putInteger( idrowCount, 1 );
-	    var idcolumnCount = stringIDToTypeID( "columnCount" );
-	    desc197.putInteger( idcolumnCount, 1 );
-	    var idrowMajorOrder = stringIDToTypeID( "rowMajorOrder" );
-	    desc197.putBoolean( idrowMajorOrder, true );
-	    var idrowGutter = stringIDToTypeID( "rowGutter" );
-	    var idPxl = charIDToTypeID( "#Pxl" );
-	    desc197.putUnitDouble( idrowGutter, idPxl, 0.000000 );
-	    var idcolumnGutter = stringIDToTypeID( "columnGutter" );
-	    var idPxl = charIDToTypeID( "#Pxl" );
-	    desc197.putUnitDouble( idcolumnGutter, idPxl, 0.000000 );
-	    var idSpcn = charIDToTypeID( "Spcn" );
-	    var idPxl = charIDToTypeID( "#Pxl" );
-	    desc197.putUnitDouble( idSpcn, idPxl, 0.000000 );
-	    var idframeBaselineAlignment = stringIDToTypeID( "frameBaselineAlignment" );
-	    var idframeBaselineAlignment = stringIDToTypeID( "frameBaselineAlignment" );
-	    var idalignByAscent = stringIDToTypeID( "alignByAscent" );
-	    desc197.putEnumerated( idframeBaselineAlignment, idframeBaselineAlignment, idalignByAscent );
-	    var idfirstBaselineMinimum = stringIDToTypeID( "firstBaselineMinimum" );
-	    var idPxl = charIDToTypeID( "#Pxl" );
-	    desc197.putUnitDouble( idfirstBaselineMinimum, idPxl, 0.000000 );
-	    var idbase = stringIDToTypeID( "base" );
-	    var desc199 = new ActionDescriptor();
-	    var idHrzn = charIDToTypeID( "Hrzn" );
-	    desc199.putDouble( idHrzn, 0.000000 );
-	    var idVrtc = charIDToTypeID( "Vrtc" );
-	    desc199.putDouble( idVrtc, 0.000000 );
-	    var idPnt = charIDToTypeID( "Pnt " );
-	    desc197.putObject( idbase, idPnt, desc199 );
-	    var idtextShape = stringIDToTypeID( "textShape" );
-	    list31.putObject( idtextShape, desc197 );
-	    desc194.putList( idtextShape, list31 );
-	    var idTxtt = charIDToTypeID( "Txtt" );
-	    var list32 = new ActionList();
-	    desc194.putList( idTxtt, list32 );
-	    var idTxLr = charIDToTypeID( "TxLr" );
-	    desc193.putObject( idUsng, idTxLr, desc194 );
-	    executeAction( idMk, desc193, DialogModes.NO );		
+	addTxtLayer: function(){
+	    var l = this.addArtLayer();
+		l.kind = LayerKind.TEXT;
+		return l;
 	},
 	
 	/**
@@ -284,7 +163,7 @@ PSD.layer = {
             textInfo = {
                 color: textItem.color.rgb.hexValue,
                 contents: textItem.contents,
-                font: textItem.font,
+                font: WEBFONTS.getWebFont(textItem.font),
                 size: Math.round(textItem.size.value),
                 textType: textItem.kind.toString(),
                 bold: textItem.fauxBold,
@@ -414,9 +293,7 @@ PSD.layer = {
 	
 	/**
 	 * 获取当前多样式的文本图层的样式
-	 * 
-	 * @return [{bold:false, color:ff0000, font:SimHei, italic:false,
-	 *         lineHeight:30; range:[0,6],size:48,underline:false},{}]
+	 * @return [{bold:false, color:ff0000, font:SimHei, italic:false, lineHeight:30; range:[0,6],size:48,underline:false},{}]
 	 */	
 	
 	getTextRange: function(){
