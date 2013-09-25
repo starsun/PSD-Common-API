@@ -3,4 +3,6 @@
  * @20130707
  * PSD 对象
  */
-var PSD = {};
+if(!PSD){
+    var PSD = {};
+}
