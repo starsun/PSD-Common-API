@@ -2,6 +2,9 @@
  * @author shandan.com@gmail.com
  * @20130707 PSD 图层操作
  */
+#include "PSD.jsx"
+#include "Fonts.jsx"
+#include "Util.jsx"
 
 PSD.layer = {
 	/**
@@ -154,90 +157,164 @@ PSD.layer = {
 	 * 获取文本图层信息
 	 */
 	getTxtLayerInfo: function(layer) {
-        var textInfo = {};
-        
-        if (!layer.kind || (layer.kind && layer.kind.toString() !== "LayerKind.TEXT")) return null;
-        var textItem = layer.textItem;
-        
-        try {
-            textInfo = {
-                color: textItem.color.rgb.hexValue,
-                contents: textItem.contents,
-                font: WEBFONTS.getWebFont(textItem.font),
-                size: Math.round(textItem.size.value),
-                textType: textItem.kind.toString(),
-                bold: textItem.fauxBold,
-                italic: textItem.fauxItalic,
-                indent: 0,// (textItem.firstLineIndent&&textItem.firstLineIndent.value)?
-							// Math.round(textItem.firstLineIndent.value):0,
-                underline: textItem.underline == UnderlineType.UNDERLINEOFF ? false : true,
-                textRange: this.getTextRange(),
-                position: {
-                    x: textItem.position[0].value,
-                    y: textItem.position[1].value
-                },
-            };
-            
-            if (textItem.kind == TextType.PARAGRAPHTEXT) {
-                textInfo.width = layer.textItem.width.value;
-                textInfo.height = layer.textItem.height.value;
-                
-                // text justification
-                switch (textItem.justification.toString()) {
-                    case 'Justification.LEFT':
-                        textInfo.textAlign = 'left';
-                        break;
-                    case 'Justification.RIGHT':
-                        textInfo.textAlign = 'right';
-                        break;
-                    case 'Justification.CENTER':
-                        textInfo.textAlign = 'center';
-                        break;
-                    case 'Justification.CENTERJUSTIFIED':
-                    case 'Justification.FULLYJUSTIFIED':
-                    case 'Justification.LEFTJUSTIFIED':
-                    case 'Justification.RIGHTJUSTIFIED':
-                        textInfo.textAlign = 'justify';
-                        break;
-                    default:
-                        textInfo.textAlign = 'left';
-                        
-                }
-            }
-            // line height
-            if (!textItem.useAutoLeading) {
-                textInfo.lineHeight = Math.round(textItem.leading.value);
-            } else {
-                try {
-                    textInfo.lineHeight = Math.round(textItem.autoLeadingAmount) + '%';
-                } catch (e) {
-					console.dir("error message on layer " + layer.name + ":")
-					console.dir(e);
-                    return null;
-                }
-            }
-        } catch (e) {
-			console.dir("error message on layer " + layer.name + ":")
-			console.dir(e);
-            return null;
-        }
-        return textInfo;		
+
+		if(!layer.kind || (layer.kind && layer.kind.toString() !== "LayerKind.TEXT")) return null;
+		var textItem = layer.textItem;
+
+		var textInfo = {
+			textRange: this.getTextRange(layer)
+		};
+
+		try {
+			if (textItem.color) {
+				textInfo.color = textItem.color.rgb.hexValue;
+			}
+		}catch(e){
+			textInfo.color = "#333";
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			if (textItem.contents) {
+				textInfo.contents = textItem.contents;
+			}
+		}catch(e){
+			textInfo.contents = layer.name;
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			if (textItem.font) {
+				textInfo.font = WEBFONTS.getWebFont(textItem.font);
+			}
+		}catch(e){
+			textInfo.font = 'Simsun';
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			if (textItem.kind) {
+				textInfo.textType = textItem.kind.toString();
+			}
+		}catch(e){
+			textInfo.textType = 'Simsun';
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+		try {
+			if (textItem.firstLineIndent) {
+				textInfo.indent = Math.round(textItem.firstLineIndent.value);
+			}
+		}catch(e){
+			textInfo.indent = 0;
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			textInfo.leftIndent = (textItem.leftIndent&&textItem.leftIndent.value)?textItem.leftIndent.value:0;
+		}catch(e){
+			textInfo.leftIndent = 0;
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			textInfo.rightIndent = (textItem.rightIndent&&textItem.rightIndent.value)?textItem.rightIndent.value:0;
+		}catch(e){
+			textInfo.rightIndent = 0;
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			textInfo.position = {x: textItem.position[0].value, y: textItem.position[1].value};
+		}catch(e){
+			textInfo.position = {x:0, y:0};
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			if (textItem.size) {
+				textInfo.size = Math.round(textItem.size.value);
+			}
+		}catch(e){
+			textInfo.size = 12;
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			if (textItem.fauxBold) {
+				textInfo.bold = textItem.fauxBold;
+			}
+		}catch(e){
+			textInfo.bold = false;
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			if (textItem.fauxItalic) {
+				textInfo.italic = textItem.fauxItalic;
+			}
+		}catch(e){
+			textInfo.italic = false;
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		try {
+			if (textItem.underline) {
+				textInfo.underline = (textItem.underline == UnderlineType.UNDERLINEOFF ? false : true);
+			}
+		}catch(e){
+			textInfo.underline = false;
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		if(textItem.kind == TextType.PARAGRAPHTEXT){
+			textInfo.width = layer.textItem.width.value;
+			textInfo.height = layer.textItem.height.value;
+
+			// text justification
+			switch(textItem.justification.toString()){
+				case 'Justification.LEFT':
+					textInfo.textAlign = 'left';
+					break;
+				case 'Justification.RIGHT':
+					textInfo.textAlign = 'right';
+					break;
+				case 'Justification.CENTER':
+					textInfo.textAlign = 'center';
+					break;
+				case 'Justification.CENTERJUSTIFIED':
+				case 'Justification.FULLYJUSTIFIED':
+				case 'Justification.LEFTJUSTIFIED':
+				case 'Justification.RIGHTJUSTIFIED':
+					textInfo.textAlign = 'justify';
+					break;
+				default:
+					textInfo.textAlign = 'left';
+
+			}
+		}
+
+
+		try{
+			if(!textItem.useAutoLeading){
+				textInfo.lineHeight = Math.round(textItem.leading.value);
+			}else{
+				textInfo.lineHeight = Math.round(textItem.autoLeadingAmount) + '%';
+			}
+		}catch(e){
+			textInfo.lineHeight = '24';
+			Util.log($.fileName, $.line, e, " on layer " + layer.name);
+		}
+
+		return textInfo;
 	},	
 	
 	/**
 	 * 选中图层
 	 */
 	setActiveLayer: function(name) {
-	    var idslct = charIDToTypeID( "slct" );
-	    var desc323 = new ActionDescriptor();
-	    var idnull = charIDToTypeID( "null" );
-	    var ref116 = new ActionReference();
-	    var idLyr = charIDToTypeID( "Lyr " );
-	    ref116.putName( idLyr, name );
-	    desc323.putReference( idnull, ref116 );
-	    var idMkVs = charIDToTypeID( "MkVs" );
-	    desc323.putBoolean( idMkVs, false );
-	    executeAction( idslct, desc323, DialogModes.NO );		
+		var layerRef = app.activeDocument.artLayers.getByName(name);
+		app.activeDocument.activeLayer = layerRef;
+		return layerRef;
 	},	
 	
 	/**
@@ -296,41 +373,128 @@ PSD.layer = {
 	 * @return [{bold:false, color:ff0000, font:SimHei, italic:false, lineHeight:30; range:[0,6],size:48,underline:false},{}]
 	 */	
 	
-	getTextRange: function(){
+	getTextRange: function(layer){
+		app.activeDocument.activeLayer = layer;
+
 		var desc = (function(){
 			var ref = new ActionReference();
 			ref.putEnumerated(charIDToTypeID("Lyr "), charIDToTypeID("Ordn"), charIDToTypeID("Trgt"));
 			return executeActionGet(ref);
 		})();
-		
-		var list =  desc.getObjectValue(charIDToTypeID("Txt "));
-        var tsr =  list.getList(charIDToTypeID("Txtt"));
-        var info = [];
-		
-        for(var i = 0, l = tsr.count;i < l; i++){
-			var tsr0 =  tsr.getObjectValue(i) ;
-			var from = tsr0.getInteger(charIDToTypeID("From"));
-			var to = tsr0.getInteger(charIDToTypeID("T   "));
-			var range = [from, to];
-			var textStyle = tsr0.getObjectValue(charIDToTypeID("TxtS"));
-			var font = textStyle.getString(charIDToTypeID("FntN" )); 
-			var size = textStyle.getDouble(charIDToTypeID("Sz  " ));
-			var color = textStyle.getObjectValue(charIDToTypeID('Clr '));
-			var bold = textStyle.getBoolean(stringIDToTypeID('syntheticBold'));
-			var italic = textStyle.getBoolean(stringIDToTypeID('syntheticItalic'));
-			var underlineValue = textStyle.getEnumerationValue(stringIDToTypeID( "underline" ));
-			var underline = underlineValue == 1647 ? true : false;
-			var autoLeading = textStyle.getBoolean(stringIDToTypeID( "autoLeading" ));
-			var textColor = new SolidColor;
-			
+
+		var list =  desc.getObjectValue(charIDToTypeID("Txt "))
+			,	tsr =  list.getList(charIDToTypeID("Txtt"))
+			,	info = []
+			,	tsr0
+			,	from
+			,	to
+			,	range
+			,	textStyle
+			,	font
+			,	size
+			,	bold
+			,	italic
+			,	underlineValue
+			,	underline
+			,	color
+			,	autoLeading
+			,	textColor
+			,	o
+			;
+
+
+		for(var i = 0, l = tsr.count;i < l; i++){
+			tsr0 =  tsr.getObjectValue(i) ;
+			from = tsr0.getInteger(charIDToTypeID("From"));
+			to = tsr0.getInteger(charIDToTypeID("T   "));
+			range = [from, to];
+			textStyle = tsr0.getObjectValue(charIDToTypeID("TxtS"));
+			try {
+				font = textStyle.getString(charIDToTypeID("FntN"));
+			}catch(e){
+				font = 'SimSun';
+				Util.log($.fileName, $.line, e);
+			}
+			try {
+				size = textStyle.getDouble(charIDToTypeID("Sz  "));
+			}catch(e){
+				size = 12;
+				Util.log($.fileName, $.line, e);
+			}
+
+			try {
+				bold = textStyle.getBoolean(stringIDToTypeID('syntheticBold'));
+			}catch(e){
+				bold = false;
+				Util.log($.fileName, $.line, e);
+			}
+
+			try {
+				italic = textStyle.getBoolean(stringIDToTypeID('syntheticItalic'));
+			}catch(e){
+				italic = false;
+				Util.log($.fileName, $.line, e);
+			}
+
+			try {
+				underlineValue = textStyle.getEnumerationValue(stringIDToTypeID("underline"));
+			}catch(e){
+				underlineValue = -1;
+				Util.log($.fileName, $.line, e);
+			}
+			underline = (underlineValue == 1647 ? true : false);
+
+			color = textStyle.getObjectValue(charIDToTypeID('Clr '));
+			autoLeading = textStyle.getBoolean(stringIDToTypeID( "autoLeading" ));
+			textColor = new SolidColor;
 			textColor.rgb.red = color.getDouble(charIDToTypeID('Rd  '));
 			textColor.rgb.green = color.getDouble(charIDToTypeID('Grn '));
 			textColor.rgb.blue = color.getDouble(charIDToTypeID('Bl  '));
-			var o = {range:range, font:font, size:size, color:textColor.rgb.hexValue, bold:bold, italic:italic, underline:underline};
+
+			o = {range:range, font:font, size:size, color:textColor.rgb.hexValue, bold:bold, italic:italic, underline:underline};
 			if(!autoLeading) o.lineHeight = textStyle.getUnitDoubleValue(charIDToTypeID( "Ldng" ));
 			info.push(o);
 		}
-        return info;       
-	}
-	
+		return info;
+	},
+
+    /**
+     * 移动当前图层到顶端
+     */
+    moveTotop: function(){
+        var idmove = charIDToTypeID( "move" );
+        var desc37 = new ActionDescriptor();
+        var idnull = charIDToTypeID( "null" );
+        var ref17 = new ActionReference();
+        var idLyr = charIDToTypeID( "Lyr " );
+        var idOrdn = charIDToTypeID( "Ordn" );
+        var idTrgt = charIDToTypeID( "Trgt" );
+        ref17.putEnumerated( idLyr, idOrdn, idTrgt );
+        desc37.putReference( idnull, ref17 );
+        var idT = charIDToTypeID( "T   " );
+        var ref18 = new ActionReference();
+        var idLyr = charIDToTypeID( "Lyr " );
+        var idOrdn = charIDToTypeID( "Ordn" );
+        var idFrnt = charIDToTypeID( "Frnt" );
+        ref18.putEnumerated( idLyr, idOrdn, idFrnt );
+        desc37.putReference( idT, ref18 );
+        executeAction( idmove, desc37, DialogModes.NO );
+    },
+
+    /**
+     * 合并当前图层
+     */
+    merge: function() {
+        var idMrgtwo = charIDToTypeID( "Mrg2" );
+        executeAction( idMrgtwo, undefined, DialogModes.NO );
+    },
+    getLayerInfo:function(layer){
+    	if(layer){
+    		
+    	}
+    	return {
+
+    	}
+    }
+
 };
